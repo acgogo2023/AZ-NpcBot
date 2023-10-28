@@ -3256,6 +3256,10 @@ std::string const& Creature::GetNameForLocaleIdx(LocaleConstant loc_idx) const
 void Creature::SetPosition(float x, float y, float z, float o)
 {
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+
+>>>>>>> 98a28581929a0311a7e3ccb3516edb5d140cabfd
     if (!Acore::IsValidMapCoord(x, y, z, o))
         return;
 
@@ -3265,9 +3269,15 @@ void Creature::SetPosition(float x, float y, float z, float o)
     //end npcbot
 
     GetMap()->CreatureRelocation(this, x, y, z, o);
+<<<<<<< HEAD
 =======
     UpdatePosition(x, y, z, o, false);
 >>>>>>> A_repo/master
+=======
+
+    UpdatePosition(x, y, z, o, false);
+
+>>>>>>> 98a28581929a0311a7e3ccb3516edb5d140cabfd
 }
 
 bool Creature::IsDungeonBoss() const

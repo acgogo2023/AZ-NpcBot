@@ -21700,13 +21700,23 @@ bool Unit::UpdatePosition(float x, float y, float z, float orientation, bool tel
     }
 
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+
+>>>>>>> 98a28581929a0311a7e3ccb3516edb5d140cabfd
     //npcbot: send bot group update
     if ((relocated || turn) && IsNPCBot())
         BotMgr::SetBotGroupUpdateFlag(ToCreature(), GROUP_UPDATE_FLAG_POSITION);
     //end npcbot
+<<<<<<< HEAD
 =======
     UpdatePositionData();
 >>>>>>> A_repo/master
+=======
+
+    UpdatePositionData();
+
+>>>>>>> 98a28581929a0311a7e3ccb3516edb5d140cabfd
 
     return (relocated || turn);
 }

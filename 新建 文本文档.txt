@@ -1,0 +1,27 @@
+Administrator@XTZJ-20220924MH MINGW64 /d/eryuwow/AAWOW/AZ-NpcBot (npcbots_3.3.5)
+$ git merge A_repo/master
+Auto-merging src/server/game/AI/CoreAI/UnitAI.h
+Auto-merging src/server/game/Entities/Creature/Creature.cpp
+CONFLICT (content): Merge conflict in src/server/game/Entities/Creature/Creature.cpp
+Auto-merging src/server/game/Entities/Creature/Creature.h
+Auto-merging src/server/game/Entities/GameObject/GameObject.cpp
+Auto-merging src/server/game/Entities/Object/Object.cpp
+Auto-merging src/server/game/Entities/Object/Object.h
+Auto-merging src/server/game/Entities/Player/Player.cpp
+Auto-merging src/server/game/Entities/Player/Player.h
+Auto-merging src/server/game/Entities/Player/PlayerUpdates.cpp
+Auto-merging src/server/game/Entities/Transport/Transport.cpp
+Auto-merging src/server/game/Entities/Unit/Unit.cpp
+CONFLICT (content): Merge conflict in src/server/game/Entities/Unit/Unit.cpp
+Auto-merging src/server/game/Entities/Unit/Unit.h
+Auto-merging src/server/game/Entities/Vehicle/Vehicle.cpp
+Auto-merging src/server/game/Globals/ObjectMgr.cpp
+Auto-merging src/server/game/Grids/Notifiers/GridNotifiers.h
+Auto-merging src/server/game/Maps/Map.cpp
+Auto-merging src/server/game/Maps/MapMgr.cpp
+Auto-merging src/server/game/Spells/Auras/SpellAuraEffects.cpp
+Auto-merging src/server/game/Spells/SpellEffects.cpp
+Auto-merging src/server/scripts/Kalimdor/CavernsOfTime/BattleForMountHyjal/hyjalAI.cpp
+Auto-merging src/server/shared/SharedDefines.h
+Automatic merge failed; fix conflicts and then commit the result.
+
