@@ -353,16 +353,15 @@ void Creature::SearchFormation()
 
 void Creature::RemoveCorpse(bool setSpawnTime, bool skipVisibility)
 {
-<<<<<<< HEAD
+
     //npcbot
     if (IsNPCBotOrPet())
         return;
     //end npcbot
 
-    if (getDeathState() != CORPSE)
-=======
+
     if (getDeathState() != DeathState::Corpse)
->>>>>>> A_repo/master
+
         return;
 
     m_corpseRemoveTime = GameTime::GetGameTime().count();
@@ -3259,11 +3258,11 @@ std::string const& Creature::GetNameForLocaleIdx(LocaleConstant loc_idx) const
 
 void Creature::SetPosition(float x, float y, float z, float o)
 {
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
 
->>>>>>> 98a28581929a0311a7e3ccb3516edb5d140cabfd
+
+
+
+
     if (!Acore::IsValidMapCoord(x, y, z, o))
         return;
 
@@ -3273,15 +3272,12 @@ void Creature::SetPosition(float x, float y, float z, float o)
     //end npcbot
 
     GetMap()->CreatureRelocation(this, x, y, z, o);
-<<<<<<< HEAD
-=======
-    UpdatePosition(x, y, z, o, false);
->>>>>>> A_repo/master
-=======
 
     UpdatePosition(x, y, z, o, false);
 
->>>>>>> 98a28581929a0311a7e3ccb3516edb5d140cabfd
+
+    UpdatePosition(x, y, z, o, false);
+
 }
 
 bool Creature::IsDungeonBoss() const
@@ -4014,7 +4010,7 @@ bool Creature::LoadBotCreatureFromDB(ObjectGuid::LowType spawnId, Map* map, bool
     //We should set first home position, because then AI calls home movement
     SetHomePosition(*this);
 
-    m_deathState = ALIVE;
+    m_deathState = DeathState::Alive;
     m_respawnTime = 0;
 
     uint32 curhealth;
@@ -4036,7 +4032,7 @@ bool Creature::LoadBotCreatureFromDB(ObjectGuid::LowType spawnId, Map* map, bool
         SetPower(POWER_MANA, GetMaxPower(POWER_MANA));
     }
 
-    SetHealth(m_deathState == ALIVE ? curhealth : 0);
+    SetHealth(m_deathState == DeathState::Alive ? curhealth : 0);
 
     // checked at creature_template loading
     m_defaultMovementType = data ? MovementGeneratorType(data->movementType) : IDLE_MOTION_TYPE;

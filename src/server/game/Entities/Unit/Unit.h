@@ -1844,19 +1844,15 @@ public:
 
     void BuildHeartBeatMsg(WorldPacket* data) const;
 
-<<<<<<< HEAD
-    [[nodiscard]] bool IsAlive() const { return (m_deathState == ALIVE); };
-    [[nodiscard]] bool isDying() const { return (m_deathState == JUST_DIED); };
-    [[nodiscard]] bool isDead() const { return (m_deathState == DEAD || m_deathState == CORPSE); };
-    //npcbot
-    /*
-=======
+
+
+
     [[nodiscard]] bool IsAlive() const { return (m_deathState == DeathState::Alive); };
     [[nodiscard]] bool isDying() const { return (m_deathState == DeathState::JustDied); };
     [[nodiscard]] bool isDead() const { return (m_deathState == DeathState::Dead || m_deathState == DeathState::Corpse); };
->>>>>>> A_repo/master
+
     DeathState getDeathState() { return m_deathState; };
-    */
+
     DeathState getDeathState() const { return m_deathState; };
     //end npcbot
     virtual void setDeathState(DeathState s, bool despawn = false);           // overwrited in Creature/Player/Pet
