@@ -43,6 +43,10 @@
 #include "Vehicle.h"
 #include "Weather.h"
 
+//npcbot
+#include "botmgr.h"
+//end npcbot
+
 union u_map_magic
 {
     char asChar[4];
@@ -658,6 +662,9 @@ bool Map::AddToMap(T* obj, bool checkTransport)
     //obj->SetMap(this);
     obj->AddToWorld();
 
+    //npcbot: do not add bots to transport (handled inside AI)
+    if (!obj->IsNPCBotOrPet())
+    //end npcbot
     if (checkTransport)
         if (!(obj->GetTypeId() == TYPEID_GAMEOBJECT && obj->ToGameObject()->IsTransport())) // dont add transport to transport ;d
             if (Transport* transport = GetTransportForPos(obj->GetPhaseMask(), obj->GetPositionX(), obj->GetPositionY(), obj->GetPositionZ(), obj))
@@ -3185,7 +3192,26 @@ uint32 Map::GetPlayersCountExceptGMs() const
     uint32 count = 0;
     for (MapRefMgr::const_iterator itr = m_mapRefMgr.begin(); itr != m_mapRefMgr.end(); ++itr)
         if (!itr->GetSource()->IsGameMaster())
+        //npcbot - count npcbots as group members (event if not in group)
+        {
+            if (itr->GetSource()->HaveBot() && BotMgr::LimitBots(this))
+            {
+                ++count;
+                BotMap const* botmap = itr->GetSource()->GetBotMgr()->GetBotMap();
+                for (BotMap::const_iterator itr = botmap->begin(); itr != botmap->end(); ++itr)
+                {
+                    Creature* cre = itr->second;
+                    if (!cre || !cre->IsInWorld() || cre->FindMap() != this || cre->IsTempBot())
+                        continue;
+                    ++count;
+                }
+                continue;
+            }
+        //end npcbot
             ++count;
+        //npcbot
+        }
+        //end npcbot
     return count;
 }
 
@@ -3251,6 +3277,10 @@ void Map::AddToActive(Creature* c)
         GridCoord p = Acore::ComputeGridCoord(x, y);
         if (getNGrid(p.x_coord, p.y_coord))
             getNGrid(p.x_coord, p.y_coord)->incUnloadActiveLock();
+        //npcbot
+        else if (c->IsNPCBot())
+            EnsureGridLoadedForActiveObject(Cell(Acore::ComputeCellCoord(c->GetPositionX(), c->GetPositionY())), c);
+        //end npcbot
         else
         {
             GridCoord p2 = Acore::ComputeGridCoord(c->GetPositionX(), c->GetPositionY());
@@ -3281,10 +3311,19 @@ void Map::RemoveFromActive(Creature* c)
     if (!c->IsPet() && c->GetSpawnId())
     {
         float x, y, z;
+        //npcbot: prevent crash from accessing deleted creatureData
+        if (c->IsNPCBot())
+            c->GetHomePosition().GetPosition(x, y, z);
+        else
+        //end npcbot
         c->GetRespawnPosition(x, y, z);
         GridCoord p = Acore::ComputeGridCoord(x, y);
         if (getNGrid(p.x_coord, p.y_coord))
             getNGrid(p.x_coord, p.y_coord)->decUnloadActiveLock();
+        //npcbot
+        else if (c->IsNPCBot())
+            EnsureGridLoaded(Cell(Acore::ComputeCellCoord(c->GetPositionX(), c->GetPositionY())));
+        //end npcbot
         else
         {
             GridCoord p2 = Acore::ComputeGridCoord(c->GetPositionX(), c->GetPositionY());

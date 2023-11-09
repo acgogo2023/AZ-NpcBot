@@ -44,6 +44,10 @@
 //  see: https://github.com/azerothcore/azerothcore-wotlk/issues/9766
 #include "GridNotifiersImpl.h"
 
+//npcbot
+#include "botmgr.h"
+//end npcbot
+
 // Zone Interval should be 1 second
 constexpr auto ZONE_UPDATE_INTERVAL = 1000;
 
@@ -412,6 +416,10 @@ void Player::Update(uint32 p_time)
         SetHasDelayedTeleport(false);
         TeleportTo(teleportStore_dest, teleportStore_options);
     }
+
+    //NpcBot mod: Update
+    _botMgr->Update(p_time);
+    //end Npcbot
 }
 
 void Player::UpdateMirrorTimers()
@@ -1483,6 +1491,11 @@ void Player::UpdatePvP(bool state, bool _override)
         pvpInfo.EndTimer = GameTime::GetGameTime().count();
         SetPvP(state);
     }
+
+    //npcbot: update pvp flags for bots
+    if (HaveBot())
+        _botMgr->UpdatePvPForBots();
+    //end npcbot
 
     RemovePlayerFlag(PLAYER_FLAGS_PVP_TIMER);
     sScriptMgr->OnPlayerPVPFlagChange(this, state);
