@@ -315,7 +315,7 @@ void Player::Update(uint32 p_time)
         RegenerateAll();
     }
 
-    if (m_deathState == JUST_DIED)
+    if (m_deathState == DeathState::JustDied)
         KillPlayer();
 
     if (m_nextSave)
@@ -417,6 +417,13 @@ void Player::Update(uint32 p_time)
         TeleportTo(teleportStore_dest, teleportStore_options);
     }
 
+    if (!IsBeingTeleported() && bRequestForcedVisibilityUpdate)
+    {
+        bRequestForcedVisibilityUpdate = false;
+        UpdateObjectVisibility(true, true);
+        m_delayed_unit_relocation_timer = 0;
+        RemoveFromNotify(NOTIFY_VISIBILITY_CHANGED);
+    }
     //NpcBot mod: Update
     _botMgr->Update(p_time);
     //end Npcbot
@@ -1555,13 +1562,23 @@ void Player::UpdateVisibilityForPlayer(bool mapChange)
         m_seer = this;
     }
 
-    // updates visibility of all objects around point of view for current player
-    Acore::VisibleNotifier notifier(*this, mapChange);
-    Cell::VisitAllObjects(m_seer, notifier, GetSightRange());
-    notifier.SendToSelf();   // send gathered data
+    Acore::VisibleNotifier notifierNoLarge(
+        *this, mapChange,
+        false); // visit only objects which are not large; default distance
+    Cell::VisitAllObjects(m_seer, notifierNoLarge,
+                          GetSightRange() + VISIBILITY_INC_FOR_GOBJECTS);
+    notifierNoLarge.SendToSelf();
+
+    Acore::VisibleNotifier notifierLarge(
+        *this, mapChange, true); // visit only large objects; maximum distance
+    Cell::VisitAllObjects(m_seer, notifierLarge, GetSightRange());
+    notifierLarge.SendToSelf();
+
+    if (mapChange)
+        m_last_notify_position.Relocate(-5000.0f, -5000.0f, -5000.0f, 0.0f);
 }
 
-void Player::UpdateObjectVisibility(bool forced)
+void Player::UpdateObjectVisibility(bool forced, bool fromUpdate)
 {
     // Prevent updating visibility if player is not in world (example: LoadFromDB sets drunkstate which updates invisibility while player is not in map)
     if (!IsInWorld())
@@ -1571,6 +1588,11 @@ void Player::UpdateObjectVisibility(bool forced)
         AddToNotify(NOTIFY_VISIBILITY_CHANGED);
     else if (!isBeingLoaded())
     {
+        if (!fromUpdate) // pussywizard:
+        {
+            bRequestForcedVisibilityUpdate = true;
+            return;
+        }
         Unit::UpdateObjectVisibility(true);
         UpdateVisibilityForPlayer();
     }

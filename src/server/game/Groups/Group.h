@@ -18,6 +18,7 @@
 #ifndef AZEROTHCORE_GROUP_H
 #define AZEROTHCORE_GROUP_H
 
+#include "DataMap.h"
 #include "DBCEnums.h"
 #include "GroupRefMgr.h"
 #include "LootMgr.h"
@@ -331,6 +332,7 @@ public:
     //npcbots
     ObjectGuid const* GetTargetIcons() const { return m_targetIcons; }
     //end npcbots
+    DataMap CustomData;
 
 protected:
     void _homebindIfInstance(Player* player);

@@ -91,7 +91,11 @@ enum PaladinSpells
     SPELL_BLOOD_CORRUPTION                       = 53742,
 
     SPELL_GENERIC_ARENA_DAMPENING                = 74410,
-    SPELL_GENERIC_BATTLEGROUND_DAMPENING         = 74411
+    SPELL_GENERIC_BATTLEGROUND_DAMPENING         = 74411,
+
+    // Crystalforge Raiment - Tier 5 Holy 2 Set
+    SPELL_IMPROVED_JUDGEMENT                     = 37188,
+    SPELL_IMPROVED_JUDGEMENT_ENERGIZE            = 43838
 };
 
 enum PaladinSpellIcons
@@ -937,6 +941,12 @@ public:
 
         GetCaster()->CastSpell(GetHitUnit(), _spellId, true);
         GetCaster()->CastSpell(GetHitUnit(), spellId2, true);
+
+        // Tier 5 Holy - 2 Set
+        if (GetCaster()->HasAura(SPELL_IMPROVED_JUDGEMENT))
+        {
+            GetCaster()->CastSpell(GetCaster(), SPELL_IMPROVED_JUDGEMENT_ENERGIZE, true);
+        }
 
         // Judgement of the Just
         if (GetCaster()->GetAuraEffect(SPELL_AURA_ADD_FLAT_MODIFIER, SPELLFAMILY_PALADIN, 3015, 0))
