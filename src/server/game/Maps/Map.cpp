@@ -2786,26 +2786,6 @@ template <>
 void Map::AddToActive(Creature* c)
 {
     AddToActiveHelper(c);
-
-    // also not allow unloading spawn grid to prevent creating creature clone at load
-    if (!c->IsPet() && c->GetSpawnId())
-    {
-        float x, y, z;
-        c->GetRespawnPosition(x, y, z);
-        GridCoord p = Acore::ComputeGridCoord(x, y);
-        if (getNGrid(p.x_coord, p.y_coord))
-            getNGrid(p.x_coord, p.y_coord)->incUnloadActiveLock();
-        //npcbot
-        else if (c->IsNPCBot())
-            EnsureGridLoadedForActiveObject(Cell(Acore::ComputeCellCoord(c->GetPositionX(), c->GetPositionY())), c);
-        //end npcbot
-        else
-        {
-            GridCoord p2 = Acore::ComputeGridCoord(c->GetPositionX(), c->GetPositionY());
-            LOG_ERROR("maps", "Active creature {} added to grid[{}, {}] but spawn grid[{}, {}] was not loaded.",
-                c->GetGUID().ToString().c_str(), p.x_coord, p.y_coord, p2.x_coord, p2.y_coord);
-        }
-    }
 }
 
 template<>
@@ -2830,31 +2810,6 @@ template <>
 void Map::RemoveFromActive(Creature* c)
 {
     RemoveFromActiveHelper(c);
-
-    // also allow unloading spawn grid
-    if (!c->IsPet() && c->GetSpawnId())
-    {
-        float x, y, z;
-        //npcbot: prevent crash from accessing deleted creatureData
-        if (c->IsNPCBot())
-            c->GetHomePosition().GetPosition(x, y, z);
-        else
-        //end npcbot
-        c->GetRespawnPosition(x, y, z);
-        GridCoord p = Acore::ComputeGridCoord(x, y);
-        if (getNGrid(p.x_coord, p.y_coord))
-            getNGrid(p.x_coord, p.y_coord)->decUnloadActiveLock();
-        //npcbot
-        else if (c->IsNPCBot())
-            EnsureGridLoaded(Cell(Acore::ComputeCellCoord(c->GetPositionX(), c->GetPositionY())));
-        //end npcbot
-        else
-        {
-            GridCoord p2 = Acore::ComputeGridCoord(c->GetPositionX(), c->GetPositionY());
-            LOG_ERROR("maps", "Active creature {} removed from grid[{}, {}] but spawn grid[{}, {}] was not loaded.",
-                c->GetGUID().ToString().c_str(), p.x_coord, p.y_coord, p2.x_coord, p2.y_coord);
-        }
-    }
 }
 
 template<>
