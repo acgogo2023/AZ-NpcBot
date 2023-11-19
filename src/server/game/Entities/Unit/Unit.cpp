@@ -1685,6 +1685,7 @@ void Unit::CalculateMeleeDamage(Unit* victim, CalcDamageInfo* damageInfo, Weapon
         // Script Hook For CalculateMeleeDamage -- Allow scripts to change the Damage pre class mitigation calculations
         sScriptMgr->ModifyMeleeDamage(damageInfo->target, damageInfo->attacker, damage);
 
+//<<<<<<< HEAD
         //NpcBot mod: apply bot damage mods
         if (IsNPCBotOrPet())
         {
@@ -1696,12 +1697,17 @@ void Unit::CalculateMeleeDamage(Unit* victim, CalcDamageInfo* damageInfo, Weapon
         }
         //End NpcBot
 
+//=======
+//>>>>>>> pr_14
         if (victim->GetAI())
         {
             victim->GetAI()->OnCalculateMeleeDamageReceived(damage, this);
         }
 
+//<<<<<<< HEAD
 
+//=======
+//>>>>>>> pr_14
         // Calculate armor reduction
         if (IsDamageReducedByArmor((SpellSchoolMask)(damageInfo->damages[i].damageSchoolMask)))
         {

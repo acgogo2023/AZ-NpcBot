@@ -2332,14 +2332,6 @@ namespace lfg
             return;
         }
 
-        if (out)
-        {
-            if (player->GetMapId() == uint32(dungeon->map))
-                player->TeleportToEntryPoint();
-
-            return;
-        }
-
         LfgTeleportError error = LFG_TELEPORTERROR_OK;
 
         if (!player->IsAlive())
@@ -2361,6 +2353,13 @@ namespace lfg
         else if (player->GetCharmGUID() || player->IsInCombat())
         {
             error = LFG_TELEPORTERROR_COMBAT;
+        }
+        else if (out && error == LFG_TELEPORTERROR_OK)
+        {
+            if (player->GetMapId() == uint32(dungeon->map))
+                player->TeleportToEntryPoint();
+
+            return;
         }
         else
         {
@@ -2387,11 +2386,18 @@ namespace lfg
         }
 
         if (error != LFG_TELEPORTERROR_OK)
+        {
             player->GetSession()->SendLfgTeleportError(uint8(error));
 
-        //LOG_DEBUG("lfg", "TeleportPlayer: Player {} is being teleported in to map {} "
-        //    "(x: {}, y: {}, z: {}) Result: {}", player->GetName(), dungeon->map,
-        //    dungeon->x, dungeon->y, dungeon->z, error);
+            LOG_DEBUG("lfg", "Player [{}] could NOT be teleported in to map [{}] (x: {}, y: {}, z: {}) Error: {}",
+            player->GetName(), dungeon->map, dungeon->x, dungeon->y, dungeon->z, error);
+        }
+        else
+        {
+            LOG_DEBUG("lfg", "Player [{}] is being teleported in to map [{}] (x: {}, y: {}, z: {})",
+            player->GetName(), dungeon->map, dungeon->x, dungeon->y, dungeon->z);
+        }
+
     }
 
     /**
